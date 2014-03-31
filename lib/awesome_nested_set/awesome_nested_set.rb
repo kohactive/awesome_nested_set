@@ -506,7 +506,7 @@ module CollectiveIdea #:nodoc:
         # the base ActiveRecord class, using the :scope declared in the acts_as_nested_set
         # declaration.
         def nested_set_scope(options = {})
-          options = {:order => quoted_left_column_full_name}.merge(options)
+          options = {:order => quoted_order_column_full_name}.merge(options)
           scopes = Array(acts_as_nested_set_options[:scope])
           options[:conditions] = scopes.inject({}) do |conditions,attr|
             conditions.merge attr => self[attr]
@@ -737,6 +737,10 @@ module CollectiveIdea #:nodoc:
           connection.quote_column_name(right_column_name)
         end
 
+        def quoted_order_column_name
+          connection.quote_column_name(order_column)
+        end
+
         def quoted_depth_column_name
           connection.quote_column_name(depth_column_name)
         end
@@ -751,6 +755,10 @@ module CollectiveIdea #:nodoc:
 
         def quoted_left_column_full_name
           "#{quoted_table_name}.#{quoted_left_column_name}"
+        end
+
+        def quoted_order_column_full_name
+          "#{quoted_table_name}.#{quoted_order_column_name}"
         end
 
         def quoted_right_column_full_name
